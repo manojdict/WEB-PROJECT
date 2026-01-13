@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - NetPlans</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        
+        :root {
+            --primary-color: #0f172a;
+            --accent-color: #3b82f6;
+            --accent-hover: #2563eb;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-light: #64748b;
+            --white: #ffffff;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.7;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* --- Header (Glassmorphism) --- */
+        header {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            letter-spacing: -1px;
+        }
+
+        .logo span {
+            color: var(--accent-color);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        /* Active Link Highlight */
+        nav a.active {
+            color: var(--accent-color);
+            font-weight: 700;
+        }
+
+        nav a:hover {
+            color: var(--accent-color);
+        }
+
+        .btn-login {
+            background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+            color: var(--white);
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6);
+            color: white !important;
+        }
+
+        /* --- Main Content --- */
+        main {
+            flex: 1;
+            padding: 3rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* --- About Section --- */
+        .about-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            margin-bottom: 5rem;
+            background: var(--white);
+            padding: 3rem;
+            border-radius: 30px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .about-text h1 {
+            font-size: 2.8rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .about-text h1 span {
+            color: var(--accent-color);
+        }
+
+        .about-text p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+            text-align: justify;
+        }
+
+        .about-img-wrapper {
+            position: relative;
+        }
+
+        .about-img-wrapper img {
+            width: 100%;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
+            transition: transform 0.3s;
+        }
+
+        .about-img-wrapper:hover img {
+            transform: scale(1.02);
+        }
+
+        /* --- Features Section --- */
+        .features-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2rem;
+            color: var(--primary-color);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            padding-bottom: 2rem;
+        }
+
+        .feature-card {
+            background: var(--white);
+            padding: 2.5rem;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.03);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Top Accent Line */
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: var(--accent-color);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s ease;
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .icon-wrapper {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: #eff6ff;
+            width: 80px;
+            height: 80px;
+            line-height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 1.5rem auto;
+            color: var(--accent-color);
+        }
+
+        .feature-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+
+        .feature-card p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        /* --- Footer --- */
+        footer {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 3rem 5%;
+            text-align: center;
+            margin-top: auto;
+        }
+
+        footer p {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 900px) {
+            .about-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                padding: 2rem;
+                text-align: center;
+            }
+
+            .about-text p {
+                text-align: center;
+            }
+
+            header {
+                flex-direction: column;
+                padding: 1rem;
+            }
+
+            nav ul {
+                margin-top: 15px;
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">Net<span>Plans</span></div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html" class="active">About</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li id="loginItem"><a href="login.html" class="btn-login">Login</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="about-container">
+            <div class="about-text">
+                <h1>Who <span>We Are</span></h1>
+                <p>NetPlans is the world's leading marketplace for professional network diagrams. Whether you are a
+                    student, a network engineer, or a business owner, we provide high-quality topology plans to suit
+                    your needs.</p>
+                <p>Our goal is to simplify network planning by offering ready-made, editable, and standard-compliant
+                    diagrams. We bridge the gap between complexity and clarity.</p>
+            </div>
+            <div class="about-img-wrapper">
+                <img src="images/network.jpg"
+                    onerror="this.src='https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=2070&auto=format&fit=crop'"
+                    alt="About NetPlans">
+            </div>
+        </section>
+
+        <h2 class="features-title">Why Choose Us?</h2>
+        <section class="features-grid">
+            <div class="feature-card">
+                
+                <h3>High Quality</h3>
+                <p>Professionally designed diagrams using latest industry standards and best practices.</p>
+            </div>
+            <div class="feature-card">
+                
+                <h3>Instant Access</h3>
+                <p>No waiting times. Download your high-resolution files immediately after purchase.</p>
+            </div>
+            <div class="feature-card">
+                
+                <h3>24/7 Support</h3>
+                <p>Our dedicated technical team is always ready to assist you with any inquiries.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 NetPlans. All Rights Reserved.</p>
+        <p style="margin-top: 10px; font-size: 0.8rem; color: #94a3b8;">Designed for Excellence</p>
+    </footer>
+
+    <script>
+       
+        window.onload = function () {
+            const isLoggedIn = localStorage.getItem("netPlansUser");
+            const loginItem = document.getElementById("loginItem");
+
+            if (isLoggedIn === "true" && loginItem) {
+                loginItem.innerHTML = `
+                    <a href="dashboard.html" style="color:var(--primary-color); font-weight:600; margin-right:10px; text-decoration:none;">
+                        👤 My Profile
+                    </a>
+                    <a href="logout.html" class="btn-login" style="background: #ef4444; box-shadow:none;">
+                        Logout
+                    </a>
+                `;
+            }
+        };
+    </script>
+
+</body>
+
+</html>

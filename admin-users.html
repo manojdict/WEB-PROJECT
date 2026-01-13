@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Users - NetPlans Admin</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* --- Modern CSS Variables --- */
+        :root {
+            --primary-color: #0f172a;
+            --accent-color: #3b82f6;
+            --accent-hover: #2563eb;
+            --bg-color: #f1f5f9;
+            --white: #ffffff;
+            --text-main: #1e293b;
+            --text-light: #64748b;
+            --success-green: #10b981;
+            --danger-red: #ef4444;
+            --warning-orange: #f59e0b;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* --- Sidebar Styles (Same as Dashboard) --- */
+        .sidebar {
+            width: 260px;
+            background-color: var(--primary-color);
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
+            padding: 2rem 1.5rem;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .brand {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand span {
+            color: var(--accent-color);
+        }
+
+        .nav-links {
+            list-style: none;
+            flex: 1;
+        }
+
+        .nav-links li {
+            margin-bottom: 10px;
+        }
+
+        .nav-links a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            color: #94a3b8;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+        }
+
+        .nav-links a.active {
+            background-color: var(--accent-color);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        .logout-btn {
+            margin-top: auto;
+            color: #fca5a5 !important;
+        }
+
+        .logout-btn:hover {
+            background-color: rgba(239, 68, 68, 0.1) !important;
+            color: #f87171 !important;
+        }
+
+        /* --- Main Content Area --- */
+        .main-content {
+            margin-left: 260px;
+            flex: 1;
+            padding: 2rem 3rem;
+        }
+
+        /* Header Area */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .header-title h1 {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+        }
+
+        .header-title p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        /* Add Button */
+        .btn-add {
+            background: linear-gradient(135deg, var(--success-green), #059669);
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(16, 185, 129, 0.4);
+        }
+
+        /* --- User Table --- */
+        .user-table-container {
+            background: var(--white);
+            border-radius: 20px;
+            box-shadow: var(--shadow-sm);
+            padding: 1.5rem;
+            border: 1px solid rgba(0, 0, 0, 0.03);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+
+        th {
+            text-align: left;
+            padding: 18px;
+            background: #f8fafc;
+            color: var(--text-light);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        td {
+            padding: 18px;
+            border-bottom: 1px solid #f1f5f9;
+            color: var(--text-main);
+            vertical-align: middle;
+        }
+
+        tr:hover td {
+            background-color: #fafafa;
+        }
+
+        /* User Profile in Table */
+        .user-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: #eff6ff;
+            color: var(--accent-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* Role Badges */
+        .role-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .role-admin {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .role-client {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        /* Action Buttons */
+        .action-btns {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-edit,
+        .btn-delete {
+            padding: 8px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .btn-edit {
+            background: #eff6ff;
+            color: var(--accent-color);
+        }
+
+        .btn-edit:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .btn-delete {
+            background: #fef2f2;
+            color: var(--danger-red);
+        }
+
+        .btn-delete:hover {
+            background: var(--danger-red);
+            color: white;
+        }
+
+        /* --- MODAL STYLES --- */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            padding: 2.5rem;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 450px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+            transition: 0.3s;
+        }
+
+        .close-btn:hover {
+            color: var(--danger-red);
+        }
+
+        .modal h2 {
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+            font-size: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: var(--text-main);
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: 0.3s;
+            outline: none;
+            background: #f8fafc;
+            color: var(--text-main);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: var(--accent-color);
+            background: white;
+        }
+
+        .btn-save {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+
+        .btn-save:hover {
+            background: var(--accent-color);
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                flex-direction: row;
+                justify-content: space-between;
+                padding: 1rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 1.5rem;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .btn-add {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="sidebar">
+        <div class="brand">Net<span>Plans</span> Admin</div>
+        <ul class="nav-links">
+            <li><a href="admin-dashboard.html">📊 Dashboard</a></li>
+            <li><a href="admin-upload.html">📤 Upload Plan</a></li>
+            <li><a href="admin-users.html" class="active">👥 Manage Users</a></li>
+            <li><a href="#">⚙️ Settings</a></li>
+            <li><a href="logout.html" class="logout-btn">🚪 Logout</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="page-header">
+            <div class="header-title">
+                <h1>Manage Users</h1>
+                <p>View, edit, or remove registered users and admins.</p>
+            </div>
+            <button class="btn-add" onclick="openModal('add')">
+                <span>➕</span> Add New User
+            </button>
+        </div>
+
+        <div class="user-table-container">
+            <table id="userTable">
+                <thead>
+                    <tr>
+                        <th>User Name</th>
+                        <th>Email Address</th>
+                        <th>Role</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="user-cell">
+                                <div class="user-avatar">JD</div>
+                                <span>John Doe</span>
+                            </div>
+                        </td>
+                        <td>john@example.com</td>
+                        <td><span class="role-badge role-client">Client</span></td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="btn-edit" onclick="editUser(this)">✏️</button>
+                                <button class="btn-delete" onclick="deleteUser(this)">🗑️</button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="user-cell">
+                                <div class="user-avatar" style="background:#fce7f3; color:#db2777;">AS</div>
+                                <span>Admin Super</span>
+                            </div>
+                        </td>
+                        <td>admin@netplans.com</td>
+                        <td><span class="role-badge role-admin">Admin</span></td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="btn-edit" onclick="editUser(this)">✏️</button>
+                                <button class="btn-delete" onclick="deleteUser(this)">🗑️</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="userModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle">Add New User</h2>
+
+            <form id="userForm" onsubmit="saveUser(event)">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="userName" placeholder="e.g. Sarah Smith" required>
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="userEmail" placeholder="e.g. sarah@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Role</label>
+                    <select id="userRole">
+                        <option value="Client">Client</option>
+                        <option value="Admin">Admin</option>
+                    </select>
+                </div>
+
+                <input type="hidden" id="editRowIndex">
+                <button type="submit" class="btn-save">Save User Details</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        var modal = document.getElementById("userModal");
+        var modalTitle = document.getElementById("modalTitle");
+        var nameInput = document.getElementById("userName");
+        var emailInput = document.getElementById("userEmail");
+        var roleInput = document.getElementById("userRole");
+        var currentRow = null;
+
+        function openModal(mode) {
+            modal.style.display = "flex";
+            if (mode === 'add') {
+                modalTitle.innerText = "Add New User";
+                document.getElementById("userForm").reset();
+                currentRow = null;
+            }
+        }
+
+        function closeModal() {
+            modal.style.display = "none";
+        }
+
+        function saveUser(event) {
+            event.preventDefault();
+            var name = nameInput.value;
+            var email = emailInput.value;
+            var role = roleInput.value;
+
+            // Avatar Initials 생성
+            var initials = name.split(" ").map((n) => n[0]).join("").toUpperCase().substring(0, 2);
+            var roleClass = role === "Admin" ? "role-admin" : "role-client";
+
+            if (currentRow) {
+                // Update Existing Row
+                currentRow.cells[0].innerHTML = `
+                    <div class="user-cell">
+                        <div class="user-avatar">${initials}</div>
+                        <span>${name}</span>
+                    </div>`;
+                currentRow.cells[1].innerText = email;
+                currentRow.cells[2].innerHTML = `<span class="role-badge ${roleClass}">${role}</span>`;
+            } else {
+                // Add New Row
+                var table = document.getElementById("userTable").getElementsByTagName('tbody')[0];
+                var newRow = table.insertRow();
+                newRow.innerHTML = `
+                    <td>
+                        <div class="user-cell">
+                            <div class="user-avatar">${initials}</div>
+                            <span>${name}</span>
+                        </div>
+                    </td>
+                    <td>${email}</td>
+                    <td><span class="role-badge ${roleClass}">${role}</span></td>
+                    <td>
+                        <div class="action-btns">
+                            <button class="btn-edit" onclick="editUser(this)">✏️</button>
+                            <button class="btn-delete" onclick="deleteUser(this)">🗑️</button>
+                        </div>
+                    </td>
+                `;
+            }
+            closeModal();
+        }
+
+        function editUser(btn) {
+            currentRow = btn.closest("tr");
+
+            // Get Name (Text inside span)
+            nameInput.value = currentRow.querySelector(".user-cell span").innerText;
+            emailInput.value = currentRow.cells[1].innerText;
+            roleInput.value = currentRow.querySelector(".role-badge").innerText;
+
+            modalTitle.innerText = "Edit User";
+            modal.style.display = "flex";
+        }
+
+        function deleteUser(btn) {
+            if (confirm("Are you sure you want to permanently delete this user?")) {
+                btn.closest("tr").remove();
+            }
+        }
+
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+    </script>
+
+</body>
+
+</html>

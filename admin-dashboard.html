@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - NetPlans</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* --- Modern CSS Variables --- */
+        :root {
+            --primary-color: #0f172a;
+            /* Dark Blue Sidebar */
+            --accent-color: #3b82f6;
+            /* Bright Blue Highlights */
+            --accent-hover: #2563eb;
+            --bg-color: #f1f5f9;
+            /* Light Grey Background */
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-light: #64748b;
+            --white: #ffffff;
+            --logout-red: #ef4444;
+            --success-green: #10b981;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* --- Sidebar Styles --- */
+        .sidebar {
+            width: 260px;
+            background-color: var(--primary-color);
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
+            padding: 2rem 1.5rem;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .brand {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand span {
+            color: var(--accent-color);
+        }
+
+        .nav-links {
+            list-style: none;
+            flex: 1;
+        }
+
+        .nav-links li {
+            margin-bottom: 10px;
+        }
+
+        .nav-links a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            color: #94a3b8;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+        }
+
+        .nav-links a.active {
+            background-color: var(--accent-color);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        .logout-btn {
+            margin-top: auto;
+            color: #fca5a5 !important;
+        }
+
+        .logout-btn:hover {
+            background-color: rgba(239, 68, 68, 0.1) !important;
+            color: #f87171 !important;
+        }
+
+        /* --- Main Content Area --- */
+        .main-content {
+            margin-left: 260px;
+            /* Sidebar Width */
+            flex: 1;
+            padding: 2rem 3rem;
+        }
+
+        /* Header */
+        .header-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .header-title h1 {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+        }
+
+        .header-title p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        .admin-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: var(--white);
+            padding: 8px 15px;
+            border-radius: 50px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .admin-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--accent-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        /* --- Stats Cards --- */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+        }
+
+        .stat-info h3 {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin-bottom: 2px;
+        }
+
+        .stat-info p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Colors for Icons */
+        .icon-blue {
+            background: #eff6ff;
+            color: var(--accent-color);
+        }
+
+        .icon-green {
+            background: #f0fdf4;
+            color: var(--success-green);
+        }
+
+        .icon-purple {
+            background: #faf5ff;
+            color: #a855f7;
+        }
+
+        .icon-orange {
+            background: #fff7ed;
+            color: #f97316;
+        }
+
+        /* --- Recent Orders Table --- */
+        .recent-orders {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .recent-orders h2 {
+            font-size: 1.25rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 15px;
+            background: #f8fafc;
+            color: var(--text-light);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #f1f5f9;
+            color: var(--text-main);
+            font-size: 0.95rem;
+        }
+
+        tr:hover td {
+            background-color: #fafafa;
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .status-paid {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-pending {
+            background: #fef9c3;
+            color: #854d0e;
+        }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 900px) {
+            body {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+                padding: 1rem;
+            }
+
+            .nav-links {
+                display: none;
+                /* Mobile Menu Logic needed for full toggle */
+            }
+
+            /* Simple mobile fix: Just showing logo and logout on mobile for now */
+            .sidebar .brand {
+                margin-bottom: 0;
+                font-size: 1.5rem;
+            }
+
+            .sidebar .logout-btn {
+                display: block;
+                margin: 0;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 1.5rem;
+            }
+
+            .header-wrapper {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="sidebar">
+        <div class="brand">Net<span>Plans</span> Admin</div>
+
+        <ul class="nav-links">
+            <li><a href="admin-dashboard.html" class="active"> Dashboard</a></li>
+            <li><a href="admin-upload.html"> Upload Plan</a></li>
+            <li><a href="admin-users.html"> Manage Users</a></li>
+            <li><a href="#"> Settings</a></li>
+            <li><a href="logout.html" class="logout-btn"> Logout</a></li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+
+        <div class="header-wrapper">
+            <div class="header-title">
+                <h1>Dashboard Overview</h1>
+                <p>Welcome back, Admin! Here's what's happening today.</p>
+            </div>
+            <div class="admin-profile">
+                <span>Admin User</span>
+                <div class="admin-avatar">A</div>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                
+                <div class="stat-info">
+                    <h3>Rs.25000000</h3>
+                    <p>Total Revenue</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                
+                <div class="stat-info">
+                    <h3>150</h3>
+                    <p>Total Downloads</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                
+                <div class="stat-info">
+                    <h3>45</h3>
+                    <p>Active Users</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                
+                <div class="stat-info">
+                    <h3>12</h3>
+                    <p>Total Plans</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="recent-orders">
+            <h2>Recent Orders</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>User Name</th>
+                        <th>Plan Purchased</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>John Doe</td>
+                        <td>Enterprise Network V2</td>
+                        <td>2025-10-24</td>
+                        <td><span class="status-badge status-paid">Paid</span></td>
+                        <td><strong>Rs.5000000.00</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Sarah Smith</td>
+                        <td>Cisco Lab Setup</td>
+                        <td>2025-10-23</td>
+                        <td><span class="status-badge status-paid">Paid</span></td>
+                        <td><strong>Rs.3000000.00</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Kamal Perera</td>
+                        <td>Office WiFi Plan</td>
+                        <td>2025-10-22</td>
+                        <td><span class="status-badge status-pending">Pending</span></td>
+                        <td><strong>Rs.4500000.00</strong></td>
+                    </tr>
+                    <tr>
+                        <td>Nimali Silva</td>
+                        <td>Home Study Lab</td>
+                        <td>2025-10-20</td>
+                        <td><span class="status-badge status-paid">Paid</span></td>
+                        <td><strong>Rs.2500000.00</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</body>
+
+</html>
